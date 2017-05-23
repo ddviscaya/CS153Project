@@ -16,8 +16,9 @@
       <br>
         <?php foreach ($users as $q) {
           if ($user['user_type'] == 'admin') {
-            
-            echo '<u><h4>' . $q->name . '</h4></u>';
+
+            // echo '<u><h4>' . $q->name . '</h4></u>';
+            echo '<a href="' . base_url() . 'index.php/users/update_user/' . $q->id . '"><u><h4>' . $q->name . '</h4></u></a>';
             echo '<p><b>Email: </b>' . $q->email . '</p>';
             echo '<p><b>Address: </b>' . $q->address . '</p>';
             echo '<p><b>Birthday: </b>' . $q->birthdate . '</p>';
