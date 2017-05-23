@@ -177,25 +177,118 @@ class Users extends CI_Controller {
       }
 
     }
-    public function update_user() {
-        
+
+
+	public function edit_profile() {
+
+      $data = array();
+	  $userData = array();
+      $data['users'] = $this->db->query("SELECT * FROM users")->result();
+
+	  	  if($this->input->post('regisSubmit')){
+            $this->form_validation->set_rules('name', 'Name', 'required');
+            $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+            $this->form_validation->set_rules('username', 'Username', 'required');
+            $this->form_validation->set_rules('address', 'Address', 'required');
+            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required');
+            $this->form_validation->set_rules('password', 'password', 'required');
+            $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
+
+            $userData = array(
+                'name' => strip_tags($this->input->post('name')),
+                'email' => strip_tags($this->input->post('email')),
+                'username' => strip_tags($this->input->post('username')),
+                'address' => strip_tags($this->input->post('address')),
+                'birthdate' => strip_tags($this->input->post('birthdate')),
+                'password' => md5($this->input->post('password'))
+            );
+
+            if($this->form_validation->run() == true){
+                $update = $this->user->update($value, $userData);
+                if($update){
+                    $this->session->set_userdata('success_msg', 'Your registration was successful. Please login to your account.');
+                    redirect('users/view_all');
+                }else{
+                    $data['error_msg'] = 'Some problems occured, please try again.';
+                }
+            }
+        }
+
+      if($this->session->userdata('LoggedIn')){
+            $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
+            //load the view
+            $this->load->view('nav');
+            $this->load->view('users/edit_profile', $data);
+        } else{
+            redirect('users/login');
+        }
+
     }
 
-    public function delete_user() {
+    public function update_user($value) {
+
+      $data = array();
+	  $userData = array();
+      $data['users'] = $this->db->query("SELECT * FROM users")->result();
+
+	  	  if($this->input->post('regisSubmit')){
+            $this->form_validation->set_rules('name', 'Name', 'required');
+            $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+            $this->form_validation->set_rules('username', 'Username', 'required');
+            $this->form_validation->set_rules('address', 'Address', 'required');
+            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required');
+            $this->form_validation->set_rules('password', 'password', 'required');
+            $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
+
+            $userData = array(
+                'name' => strip_tags($this->input->post('name')),
+                'email' => strip_tags($this->input->post('email')),
+                'username' => strip_tags($this->input->post('username')),
+                'address' => strip_tags($this->input->post('address')),
+                'birthdate' => strip_tags($this->input->post('birthdate')),
+                'password' => md5($this->input->post('password')),
+                'user_type' => strip_tags($this->input->post('user_type'))
+            );
+
+            if($this->form_validation->run() == true){
+                $update = $this->user->update($value, $userData);
+                if($update){
+                    $this->session->set_userdata('success_msg', 'Your registration was successful. Please login to your account.');
+                    redirect('users/view_all');
+                }else{
+                    $data['error_msg'] = 'Some problems occured, please try again.';
+                }
+            }
+        }
+
+      if($this->session->userdata('LoggedIn')){
+		    $data['value'] = $this->user->getRows(array('id'=>$value));
+            $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
+            //load the view
+            $this->load->view('nav');
+            $this->load->view('users/update_user', $data);
+        } else{
+            redirect('users/login');
+        }
 
     }
+
+    public function delete_user(){}
+
 
     public function view_all(){
       $data = array();
       $data['users'] = $this->db->query("SELECT * FROM users")->result();
-      
-        if($this->session->userdata('LoggedIn')){
+
+
+      if($this->session->userdata('LoggedIn')){
             $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
             //load the view
-            $this->load->view('nav', $data);
+            $this->load->view('nav');
             $this->load->view('users/view_all', $data);
         } else{
             redirect('users/login');
         }
     }
 }
+?>
