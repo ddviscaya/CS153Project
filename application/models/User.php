@@ -51,12 +51,15 @@ class User extends CI_Model{
             $data['modified'] = date("Y-m-d H:i:s");
         }
 
+        $result = $this->db->select_max('id')->get('users')->result_array();
+        $data['id'] = ($result[0]['id'] + 1);
+
         //insert user data to users table
         $insert = $this->db->insert('users', $data);
 
         //return the status
         if($insert){
-            return $this->db->insert_id();;
+            return $data['id'];
         }else{
             return false;
         }

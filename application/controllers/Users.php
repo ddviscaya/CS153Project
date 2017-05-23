@@ -18,7 +18,7 @@ class Users extends CI_Controller {
         if($this->session->userdata('LoggedIn')){
             $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
             //load the view
-            $this->load->view('nav');
+            $this->load->view('nav', $data);
             $this->load->view('users/account', $data);
         }else{
             redirect('users/login');
@@ -61,7 +61,7 @@ class Users extends CI_Controller {
             }
         }
         //load the view: views/users/login
-        $this->load->view('nav');
+        $this->load->view('nav', $data);
         $this->load->view('users/login', $data);
     }
 
@@ -102,7 +102,7 @@ class Users extends CI_Controller {
         }
         $data['user'] = $userData;
         //load the view
-        $this->load->view('nav');
+        $this->load->view('nav', $data);
         $this->load->view('users/registration', $data);
     }
 
@@ -135,18 +135,67 @@ class Users extends CI_Controller {
     /* ADMIN FUNCTIONALITIES */
     public function create_user(){
       $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
+      $this->load->view('nav', $data);
+
       if($data['user']['user_type'] == "admin"){
-        echo "YES";
-      }else{
-        echo "NOnonononocheck . di pwede bes";
-        //should there be a view here? or redirect nalang back to users/account?
+        $data = array();
+        $userData = array();
+        if($this->input->post('regisSubmit')){
+            $this->form_validation->set_rules('name', 'Name', 'required');
+            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check');
+            $this->form_validation->set_rules('username', 'Username', 'required');
+            $this->form_validation->set_rules('address', 'Address', 'required');
+            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required');
+            $this->form_validation->set_rules('password', 'password', 'required');
+            $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
+
+            $userData = array(
+                'name' => strip_tags($this->input->post('name')),
+                'email' => strip_tags($this->input->post('email')),
+                'username' => strip_tags($this->input->post('username')),
+                'address' => strip_tags($this->input->post('address')),
+                'birthdate' => strip_tags($this->input->post('birthdate')),
+                'password' => md5($this->input->post('password')),
+                'user_type' => 'user' //default is typical user
+            );
+
+            if($this->form_validation->run() == true){
+                $insert = $this->user->insert($userData);
+                if($insert){
+                    $this->session->set_userdata('success_msg', 'Account creation successful.');
+                    redirect('users/view_all');
+                }else{
+                    $data['error_msg'] = 'Some problems occured, please try again.';
+                }
+            }
+        }
+
+        $this->load->view('users/create_user');
+      } else {
+        //echo "Nononononocheck . di pwede bes";
+        redirect('users/account');
       }
+
     }
-    public function update_user(){}
-    public function delete_user(){}
-    public function view_user(){
-      $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
-      $this->load->view('nav');
-      $this->load->view('users/view_users', $data);
+    public function update_user() {
+        
+    }
+
+    public function delete_user() {
+
+    }
+
+    public function view_all(){
+      $data = array();
+      $data['users'] = $this->db->query("SELECT * FROM users")->result();
+      
+        if($this->session->userdata('LoggedIn')){
+            $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
+            //load the view
+            $this->load->view('nav', $data);
+            $this->load->view('users/view_all', $data);
+        } else{
+            redirect('users/login');
+        }
     }
 }
