@@ -142,7 +142,9 @@ class Users extends CI_Controller {
         //should there be a view here? or redirect nalang back to users/account?
       }
     }
-    public function update_user(){}
+    public function update_user() {
+        
+    }
 
     public function delete_user(){}
 
