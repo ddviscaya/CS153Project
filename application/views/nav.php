@@ -16,7 +16,7 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">dropdown</a>
                 <ul class="dropdown-menu">
-                <li>  <a href="<?php echo base_url(); ?>index.php/users/view_user">View Users</a></li>
+                <li>  <a href="<?php echo base_url(); ?>index.php/users/view_all">View Users</a></li>
                 <li>  <a href="<?php echo base_url(); ?>index.php/users/logout">Logout</a></li>
 
                 </ul>

@@ -74,11 +74,11 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> 'pgsql:host=localhost;dbname=cs153project',
+	'dsn'	=> 'pgsql:host=localhost;dbname=postgres',
 	'hostname' => 'localhost',
-	'username' => 'cs153',
-	'password' => 'password',
-	'database' => 'cs153project',
+	'username' => 'postgres',
+	'password' => 'root',
+	'database' => 'postgres',
 	'dbdriver' => 'pdo',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
