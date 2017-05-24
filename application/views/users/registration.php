@@ -46,7 +46,7 @@
         </div>
         <!-- bday -->
         <div class="form-group">
-            <input type="text" class="form-control" name="birthdate" placeholder="Birthdate" value="<?php echo !empty($user['birthdate'])?$user['birthdate']:''; ?>">
+            <input type="text" class="form-control" name="birthdate" placeholder="Birthdate (YYYY-MM-DD)" value="<?php echo !empty($user['birthdate'])?$user['birthdate']:''; ?>">
             <?php echo form_error('birthdate','<span class="help-block">','</span>'); ?>
         </div>
         <div class="form-group">

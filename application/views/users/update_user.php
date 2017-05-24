@@ -50,10 +50,10 @@
         <!-- bday -->
         <strong>Birthdate</strong>
         <div class="form-group">
-            <input type="text" class="form-control" name="birthdate" placeholder="Birthdate" value="<?php echo !empty($value['birthdate'])?$value['birthdate']:''; ?>">
+            <input type="text" class="form-control" name="birthdate" placeholder="Birthdate (MM/DD/YYY)" value="<?php echo !empty($value['birthdate'])?$value['birthdate']:''; ?>">
             <?php echo form_error('birthdate','<span class="help-block">','</span>'); ?>
         </div>
-        <strong>Password</strong>
+        <!-- <strong>Password</strong>
         <div class="form-group">
           <input type="password" class="form-control" name="password" placeholder="Password" required="">
           <?php echo form_error('password','<span class="help-block">','</span>'); ?>
@@ -62,7 +62,7 @@
         <div class="form-group">
           <input type="password" class="form-control" name="conf_password" placeholder="Confirm password" required="">
           <?php echo form_error('conf_password','<span class="help-block">','</span>'); ?>
-        </div>
+        </div> -->
         <strong>User Type</strong>
 		<div class="form-group">
 			<select type="text" class="form-control" name="user_type" placeholder="user_type" value="<?php echo !empty($value['user_type'])?$value['user_type']:''; ?>">

@@ -22,8 +22,9 @@
         <p><b>Address: </b><?php echo $user['address']; ?></p>
         <p><b>Birthday: </b><?php echo $user['birthdate']; ?></p>
         <p><b>Usertype: </b><?php echo $user['user_type']; ?></p>
+
+        <!-- <?php echo '<a href="' . base_url() . 'index.php/users/delete_user/' . $user['id'] . '">' . 'Delete' . '</a>'; ?> -->
     </div>
-    <!-- <a href="<?php echo base_url(); ?>index.php/users/logout" class="btn btn-info" role="button">Logout</a> -->
 </div>
 </body>
 </html>

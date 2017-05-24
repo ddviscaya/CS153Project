@@ -15,21 +15,26 @@
       <h2>Users</h2>
       <br>
         <?php foreach ($users as $q) {
-          if ($user['user_type'] == 'admin') {
+          if ($q->username != $user['username']){
+            if ($user['user_type'] == 'admin') {
 
-            // echo '<u><h4>' . $q->name . '</h4></u>';
-            echo '<a href="' . base_url() . 'index.php/users/update_user/' . $q->id . '"><u><h4>' . $q->name . '</h4></u></a>';
-            echo '<p><b>Email: </b>' . $q->email . '</p>';
-            echo '<p><b>Address: </b>' . $q->address . '</p>';
-            echo '<p><b>Birthday: </b>' . $q->birthdate . '</p>';
-            echo '<p><b>Usertype: </b>' . $q->user_type . '</p>';
-          } else {
-            echo '<u><h4>' . $q->name . '</h4></u>';
-            echo '<p><b>Birthday: </b>' . $q->birthdate . '</p>';
-            echo '<p><b>Usertype: </b>' . $q->user_type . '</p>';
+              // echo '<u><h4>' . $q->name . '</h4></u>';
+              echo '<a href="' . base_url() . 'index.php/users/update_user/' . $q->id . '"><u><h4>' . $q->name . '</h4></u></a>';
+              echo '<p><b>Email: </b>' . $q->email . '</p>';
+              echo '<p><b>Address: </b>' . $q->address . '</p>';
+              echo '<p><b>Birthday: </b>' . $q->birthdate . '</p>';
+              echo '<p><b>Usertype: </b>' . $q->user_type . '</p>';
+              echo '<a href="' . base_url() . 'index.php/users/delete_user/' . $q->id . '">' . 'Delete' . '</a>';
+
+            } else {
+              echo '<u><h4>' . $q->name . '</h4></u>';
+              echo '<p><b>Birthday: </b>' . $q->birthdate . '</p>';
+              echo '<p><b>Usertype: </b>' . $q->user_type . '</p>';
+              }
+              echo '<br><br>';
+            } 
           }
-          echo '<br>';
-        }?>
+        ?>
 
       </div>
   </div>

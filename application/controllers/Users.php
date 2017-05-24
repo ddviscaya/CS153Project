@@ -129,7 +129,7 @@ class Users extends CI_Controller {
     */
     public function checkDateTime($dt)
     {
-      $pattern = "/^(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])-[0-9]{4}$/";
+      $pattern = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
       if(preg_match($pattern, $this->input->post('birthdate'))) {
           return true;
       }
@@ -151,7 +151,7 @@ class Users extends CI_Controller {
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check');
             $this->form_validation->set_rules('username', 'Username', 'required');
             $this->form_validation->set_rules('address', 'Address', 'required');
-            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required');
+            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required|callback_checkDateTime');
             $this->form_validation->set_rules('password', 'password', 'required');
             $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
 
@@ -196,7 +196,7 @@ class Users extends CI_Controller {
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
             // $this->form_validation->set_rules('username', 'Username', 'required');
             $this->form_validation->set_rules('address', 'Address', 'required');
-            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required');
+            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required|callback_checkDateTime');
             $this->form_validation->set_rules('password', 'password', 'required');
             $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
 
@@ -213,7 +213,7 @@ class Users extends CI_Controller {
                 $update = $this->user->update($value, $userData);
                 if($update){
                     $this->session->set_userdata('success_msg', 'Your registration was successful. Please login to your account.');
-                    redirect('users/view_all');
+                    redirect('users/account');
                 }else{
                     $data['error_msg'] = 'Some problems occured, please try again.';
                 }
@@ -242,9 +242,9 @@ class Users extends CI_Controller {
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
             // $this->form_validation->set_rules('username', 'Username', 'required');
             $this->form_validation->set_rules('address', 'Address', 'required');
-            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required');
-            $this->form_validation->set_rules('password', 'password', 'required');
-            $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
+            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required|callback_checkDateTime');
+            // $this->form_validation->set_rules('password', 'password', 'required');
+            // $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
 
             $userData = array(
                 'name' => strip_tags($this->input->post('name')),
@@ -252,7 +252,7 @@ class Users extends CI_Controller {
                 // 'username' => strip_tags($this->input->post('username')),
                 'address' => strip_tags($this->input->post('address')),
                 'birthdate' => strip_tags($this->input->post('birthdate')),
-                'password' => md5($this->input->post('password')),
+                // 'password' => md5($this->input->post('password')),
                 'user_type' => strip_tags($this->input->post('user_type'))
             );
 
@@ -279,7 +279,25 @@ class Users extends CI_Controller {
 
     }
 
-    public function delete_user(){}
+    public function delete_user ($id) {
+
+        if ($data['user']['user_type'] == "admin" and $data['user']['id'] != $id){
+            $this->load->model("User");
+            $this->User->delete($id);
+            $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
+            $this->load->view('nav', $data);
+            redirect('users/view_all');
+        } else {
+            $this->session->unset_userdata('LoggedIn');
+            $this->session->unset_userdata('userId');
+            $this->session->sess_destroy();
+            $this->load->model("User");
+            $this->User->delete($id);
+            $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
+            $this->load->view('nav', $data);
+            redirect('users/login/');
+        }
+    }
 
 
     public function view_all(){
