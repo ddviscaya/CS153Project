@@ -109,6 +109,21 @@ class Users extends CI_Controller {
         redirect('users/login/');
     }
 
+    public function delete_acct ($id) {
+        
+        if($this->session->userdata('LoggedIn')){
+            $this->session->unset_userdata('LoggedIn');
+            $this->session->unset_userdata('userId');
+            $this->session->sess_destroy();
+            $this->load->model("User");
+            $this->User->delete($id);
+            $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
+            $this->load->view('nav', $data);
+        }
+        
+        redirect('users/login');
+    }
+
     /*
      * Existing email check during validation
      */
@@ -288,14 +303,7 @@ class Users extends CI_Controller {
             $this->load->view('nav', $data);
             redirect('users/view_all');
         } else {
-            $this->session->unset_userdata('LoggedIn');
-            $this->session->unset_userdata('userId');
-            $this->session->sess_destroy();
-            $this->load->model("User");
-            $this->User->delete($id);
-            $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
-            $this->load->view('nav', $data);
-            redirect('users/login/');
+            redirect('users/account');
         }
     }
 
