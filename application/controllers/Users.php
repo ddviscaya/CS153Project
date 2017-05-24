@@ -65,13 +65,13 @@ class Users extends CI_Controller {
         $data = array();
         $userData = array();
         if($this->input->post('regisSubmit')){
-            $this->form_validation->set_rules('name', 'Name', 'required');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check');
-            $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check');
-            $this->form_validation->set_rules('address', 'Address', 'required');
-            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required|callback_checkDateTime');
-            $this->form_validation->set_rules('password', 'password', 'required');
-            $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
+            $this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[3]|max_length[20]');
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_email_check');
+            $this->form_validation->set_rules('username', 'Username', 'trim|required|callback_username_check|min_length[3]|max_length[20]');
+            $this->form_validation->set_rules('address', 'Address', 'trim|required');
+            $this->form_validation->set_rules('birthdate', 'Birthdate', 'trim|required|callback_checkDateTime');
+            $this->form_validation->set_rules('password', 'password', 'trim|required|min_length[6]|max_length[20]');
+            $this->form_validation->set_rules('conf_password', 'confirm password', 'trim|required|matches[password]');
 
             $userData = array(
                 'name' => strip_tags($this->input->post('name')),
@@ -173,12 +173,12 @@ class Users extends CI_Controller {
         $data = array();
         $userData = array();
         if($this->input->post('regisSubmit')){
-            $this->form_validation->set_rules('name', 'Name', 'required');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check');
-            $this->form_validation->set_rules('username', 'Username', 'required');
-            $this->form_validation->set_rules('address', 'Address', 'required');
+            $this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[3]|max_length[20]');
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_email_check');
+            $this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[3]|callback_username_check|max_length[20]');
+            $this->form_validation->set_rules('address', 'Address', 'trim|required');
             $this->form_validation->set_rules('birthdate', 'Birthdate', 'required|callback_checkDateTime');
-            $this->form_validation->set_rules('password', 'password', 'required');
+            $this->form_validation->set_rules('password', 'password', 'trim|required|min_length[6]|max_length[20]');
             $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
 
             $userData = array(
@@ -218,12 +218,12 @@ class Users extends CI_Controller {
       $data['users'] = $this->db->query("SELECT * FROM users")->result();
 
 	  	  if($this->input->post('regisSubmit')){
-            $this->form_validation->set_rules('name', 'Name', 'required');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+            $this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[3]|max_length[20]');
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
             // $this->form_validation->set_rules('username', 'Username', 'required');
-            $this->form_validation->set_rules('address', 'Address', 'required');
+            $this->form_validation->set_rules('address', 'Address', 'trim|required');
             $this->form_validation->set_rules('birthdate', 'Birthdate', 'required|callback_checkDateTime');
-            $this->form_validation->set_rules('password', 'password', 'required');
+            $this->form_validation->set_rules('password', 'password', 'trim|required|min_length[6]|max_length[20]');
             $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
 
             $userData = array(
@@ -236,7 +236,9 @@ class Users extends CI_Controller {
             );
 
             if($this->form_validation->run() == true){
-                $update = $this->user->update($value, $userData);
+                // $update = $this->user->update($value, $userData);
+                $update = $this->user->update($this->session->userdata('userId'), $userData);
+
                 if($update){
                     $this->session->set_userdata('success_msg', 'Your registration was successful. Please login to your account.');
                     redirect('users/account');
@@ -264,11 +266,13 @@ class Users extends CI_Controller {
       $data['users'] = $this->db->query("SELECT * FROM users")->result();
 
 	  	  if($this->input->post('regisSubmit')){
-            $this->form_validation->set_rules('name', 'Name', 'required');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+            $this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[3]|max_length[20]');
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
             // $this->form_validation->set_rules('username', 'Username', 'required');
-            $this->form_validation->set_rules('address', 'Address', 'required');
+            $this->form_validation->set_rules('address', 'Address', 'trim|required');
             $this->form_validation->set_rules('birthdate', 'Birthdate', 'required|callback_checkDateTime');
+            $this->form_validation->set_rules('user_type', 'user_type', 'required|callback_checkifPwedePalitan');
+
             // $this->form_validation->set_rules('password', 'password', 'required');
             // $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
 
@@ -304,7 +308,19 @@ class Users extends CI_Controller {
         }
 
     }
+    public function checkifPwedePalitan($str){
+        $con['returnType'] = 'count';
+        $con['conditions'] = array('user_type'=>'admin');
+        $countAdmin = $this->user->getRows($con);
+        if($countAdmin <= 1 and $str == "user"){
+            $this->form_validation->set_message('checkifPwedePalitan', 'admin count shoud be >= 1'); //hindi lumalabas error messsage
+            // $this->session->set_userdata('error_msg', 'You cant change this user type, admin count shoud be >= 1 ');
 
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
     public function delete_user ($id) {
 
         if ($data['user']['user_type'] == "admin" and $data['user']['id'] != $id){

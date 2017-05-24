@@ -14,7 +14,13 @@
       <br><br>
       <h2>UPDATE</h2>
       <br>
-
+      <?php
+      if(!empty($success_msg)){
+          echo '<p class="statusMsg">'.$success_msg.'</p>';
+      }elseif(!empty($error_msg)){
+          echo '<p class="statusMsg">'.$error_msg.'</p>';
+      }
+      ?>
         <?php
 			echo '<u><h4>' . $value['name'] . '</h4></u>';
             echo '<p><b>Email: </b>' . $value['email'] . '</p>';

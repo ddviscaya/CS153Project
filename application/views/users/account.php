@@ -24,7 +24,7 @@
         <p><b>Usertype: </b><?php echo $user['user_type']; ?></p>
 
 
-        <?php echo '<a href="' . base_url() . 'index.php/users/delete_acct/' . $user['id'] . '">' . 'Delete' . '</a>'; ?>
+        <!-- <?php echo '<a href="' . base_url() . 'index.php/users/delete_acct/' . $user['id'] . '">' . 'Delete' . '</a>'; ?> -->
 
     </div>
 </div>
