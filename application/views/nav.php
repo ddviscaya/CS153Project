@@ -4,11 +4,7 @@
               <a href="#" class="navbar-brand"></a>
             </div>
             <div>
-              <!-- <ul class="nav navbar-nav navbar-right">
-                  <li><a href="<?php echo base_url(); ?>">Home</a></li>
-                  <li class="active"><a href="<?php echo base_url(); ?>index.php/users/logout">Logout</a></li>
-              </ul>
-            </div> -->
+
               <ul class="nav navbar-nav navbar-right">
                 <li><a href="<?php echo base_url(); ?>">Home</a></li>
                 <?php if ($this->session->userdata('LoggedIn')){ ?>

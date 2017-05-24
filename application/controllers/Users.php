@@ -33,14 +33,7 @@ class Users extends CI_Controller {
         if($this->session->userdata('LoggedIn')){
           redirect('users/account');
         }
-        // if($this->session->userdata('success_msg')){
-        //     $data['success_msg'] = $this->session->userdata('success_msg');
-        //     $this->session->unset_userdata('success_msg');
-        // }
-        // if($this->session->userdata('error_msg')){
-        //     $data['error_msg'] = $this->session->userdata('error_msg');
-        //     $this->session->unset_userdata('error_msg');
-        // }
+
         if($this->input->post('loginSubmit')){
             $this->form_validation->set_rules('username', 'Username', 'required');
             $this->form_validation->set_rules('password', 'password', 'required');
@@ -76,7 +69,7 @@ class Users extends CI_Controller {
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check');
             $this->form_validation->set_rules('username', 'Username', 'required');
             $this->form_validation->set_rules('address', 'Address', 'required');
-            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required');
+            $this->form_validation->set_rules('birthdate', 'Birthdate', 'required|callback_checkDateTime');
             $this->form_validation->set_rules('password', 'password', 'required');
             $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
 
@@ -131,7 +124,20 @@ class Users extends CI_Controller {
         }
     }
 
-
+    /*
+    * Checks valid date format
+    */
+    public function checkDateTime($dt)
+    {
+      $pattern = "/^(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])-[0-9]{4}$/";
+      if(preg_match($pattern, $this->input->post('birthdate'))) {
+          return true;
+      }
+      else {
+        $this->form_validation->set_message('checkDateTime', 'Invalid Date!');
+        return false;
+      }
+    }
     /* ADMIN FUNCTIONALITIES */
     public function create_user(){
       $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
@@ -188,7 +194,7 @@ class Users extends CI_Controller {
 	  	  if($this->input->post('regisSubmit')){
             $this->form_validation->set_rules('name', 'Name', 'required');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-            $this->form_validation->set_rules('username', 'Username', 'required');
+            // $this->form_validation->set_rules('username', 'Username', 'required');
             $this->form_validation->set_rules('address', 'Address', 'required');
             $this->form_validation->set_rules('birthdate', 'Birthdate', 'required');
             $this->form_validation->set_rules('password', 'password', 'required');
@@ -197,7 +203,7 @@ class Users extends CI_Controller {
             $userData = array(
                 'name' => strip_tags($this->input->post('name')),
                 'email' => strip_tags($this->input->post('email')),
-                'username' => strip_tags($this->input->post('username')),
+                // 'username' => strip_tags($this->input->post('username')),
                 'address' => strip_tags($this->input->post('address')),
                 'birthdate' => strip_tags($this->input->post('birthdate')),
                 'password' => md5($this->input->post('password'))
@@ -234,7 +240,7 @@ class Users extends CI_Controller {
 	  	  if($this->input->post('regisSubmit')){
             $this->form_validation->set_rules('name', 'Name', 'required');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-            $this->form_validation->set_rules('username', 'Username', 'required');
+            // $this->form_validation->set_rules('username', 'Username', 'required');
             $this->form_validation->set_rules('address', 'Address', 'required');
             $this->form_validation->set_rules('birthdate', 'Birthdate', 'required');
             $this->form_validation->set_rules('password', 'password', 'required');
@@ -243,7 +249,7 @@ class Users extends CI_Controller {
             $userData = array(
                 'name' => strip_tags($this->input->post('name')),
                 'email' => strip_tags($this->input->post('email')),
-                'username' => strip_tags($this->input->post('username')),
+                // 'username' => strip_tags($this->input->post('username')),
                 'address' => strip_tags($this->input->post('address')),
                 'birthdate' => strip_tags($this->input->post('birthdate')),
                 'password' => md5($this->input->post('password')),
