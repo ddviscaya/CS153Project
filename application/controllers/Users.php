@@ -273,7 +273,25 @@ class Users extends CI_Controller {
 
     }
 
-    public function delete_user(){}
+    public function delete_user ($id) {
+
+        if ($data['user']['user_type'] == "admin" and $data['user']['id'] != $id){
+            $this->load->model("User");
+            $this->User->delete($id);
+            $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
+            $this->load->view('nav', $data);
+            redirect('users/view_all');
+        } else {
+            $this->session->unset_userdata('LoggedIn');
+            $this->session->unset_userdata('userId');
+            $this->session->sess_destroy();
+            $this->load->model("User");
+            $this->User->delete($id);
+            $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
+            $this->load->view('nav', $data);
+            redirect('users/login/');
+        }
+    }
 
 
     public function view_all(){
