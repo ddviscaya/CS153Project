@@ -217,7 +217,7 @@ class Users extends CI_Controller {
       if($this->session->userdata('LoggedIn')){
             $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
             //load the view
-            $this->load->view('nav');
+            $this->load->view('nav', $data);
             $this->load->view('users/edit_profile', $data);
         } else{
             redirect('users/login');
@@ -265,7 +265,7 @@ class Users extends CI_Controller {
 		    $data['value'] = $this->user->getRows(array('id'=>$value));
             $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
             //load the view
-            $this->load->view('nav');
+            $this->load->view('nav', $data);
             $this->load->view('users/update_user', $data);
         } else{
             redirect('users/login');
@@ -284,7 +284,7 @@ class Users extends CI_Controller {
       if($this->session->userdata('LoggedIn')){
             $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
             //load the view
-            $this->load->view('nav');
+            $this->load->view('nav', $data);
             $this->load->view('users/view_all', $data);
         } else{
             redirect('users/login');
