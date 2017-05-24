@@ -32,7 +32,8 @@
             echo '<p><b>Usertype: </b>' . $q->user_type . '</p>';
             echo '<br>';
             }
-          } ?>
+          }
+        }?>
 
       </div>
   </div>

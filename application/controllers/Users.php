@@ -67,7 +67,7 @@ class Users extends CI_Controller {
         if($this->input->post('regisSubmit')){
             $this->form_validation->set_rules('name', 'Name', 'required');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check');
-            $this->form_validation->set_rules('username', 'Username', 'required');
+            $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check');
             $this->form_validation->set_rules('address', 'Address', 'required');
             $this->form_validation->set_rules('birthdate', 'Birthdate', 'required|callback_checkDateTime');
             $this->form_validation->set_rules('password', 'password', 'required');
@@ -110,7 +110,7 @@ class Users extends CI_Controller {
     }
 
     public function delete_acct ($id) {
-        
+
         if($this->session->userdata('LoggedIn')){
             $this->session->unset_userdata('LoggedIn');
             $this->session->unset_userdata('userId');
@@ -120,7 +120,7 @@ class Users extends CI_Controller {
             $data['user'] = $this->user->getRows(array('id'=>$this->session->userdata('userId')));
             $this->load->view('nav', $data);
         }
-        
+
         redirect('users/login');
     }
 
@@ -133,6 +133,17 @@ class Users extends CI_Controller {
         $checkEmail = $this->user->getRows($con);
         if($checkEmail > 0){
             $this->form_validation->set_message('email_check', 'The given email already exists.');
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    public function username_check($str){
+        $con['returnType'] = 'count';
+        $con['conditions'] = array('username'=>$str);
+        $checkUsername = $this->user->getRows($con);
+        if($checkUsername > 0){
+            $this->form_validation->set_message('username_check', 'The given username already exists.');
             return FALSE;
         } else {
             return TRUE;
