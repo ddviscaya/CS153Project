@@ -23,13 +23,14 @@
             echo '<p><b>Address: </b>' . $q->address . '</p>';
             echo '<p><b>Birthday: </b>' . $q->birthdate . '</p>';
             echo '<p><b>Usertype: </b>' . $q->user_type . '</p>';
+            echo '<a href="' . base_url() . 'index.php/users/delete_user/' . $q->id . '">' . 'Delete' . '</a>';
+            echo '<br><br>';
           } else {
             echo '<u><h4>' . $q->name . '</h4></u>';
             echo '<p><b>Birthday: </b>' . $q->birthdate . '</p>';
             echo '<p><b>Usertype: </b>' . $q->user_type . '</p>';
+            echo '<br>';
             }
-            echo '<a href="' . base_url() . 'index.php/users/delete_user/' . $q->id . '">' . 'Delete' . '</a>';
-            echo '<br><br>';
           } ?>
 
       </div>
